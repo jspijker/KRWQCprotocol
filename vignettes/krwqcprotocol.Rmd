@@ -185,7 +185,7 @@ het pakket te installeren moet vanuit R het volgende commando
 uitgevoerd worden:
 
 ```{r eval=FALSE}
-remotes::install_github("jspijker/KRWQCprotocol")
+remotes::install_github("rivm-syso/KRWQCprotocol")
 ```
 
 ## Werking KRWQCprotocol R-pakket
