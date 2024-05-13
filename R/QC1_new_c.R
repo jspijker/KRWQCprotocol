@@ -1,5 +1,5 @@
 
-#' QC1a. Controle parameterlijst BRO
+#' QC1_new_c. Controle parameterlijst BRO
 #'
 #' Controle op ID, aquocode, CASnummer, omschrijving,
 #' eenheid en hoedanigheid.
@@ -24,7 +24,7 @@
 #'
 
 
-QC1a <- function(d_parameter, d_metingen, verbose = F) {
+QC1_new_c <- function(d_parameter, d_metingen, verbose = F) {
 
   # laad parametertabel uit de BRO
   # eventueel nog toevoegen dat de parameterlijst uit de BRO automatisch wordt
@@ -96,7 +96,7 @@ QC1a <- function(d_parameter, d_metingen, verbose = F) {
   
   # voeg attribute met uitkomsten tests toe aan relevante dataset (d_metingen)
   verdacht_id <- resultaat_df$qcid
-  test <- "QC1a"
+  test <- "QC1_new_c"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
