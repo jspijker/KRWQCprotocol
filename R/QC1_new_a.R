@@ -1,4 +1,4 @@
-#' QC3a. Controle datum veldonderzoek voor labanalyse
+#' QC1_new_a. Controle datum veldonderzoek voor labanalyse
 #'
 #' Controle op de plausibiliteit van de waarden van datum
 #' veldonderzoek en datum labanalyse
@@ -22,7 +22,7 @@
 #'
 
 
-QC3a <- function(d_veld, d_metingen, verbose = F) {
+QC1_new_a <- function(d_veld, d_metingen, verbose = F) {
   
   # Check datasets op kolommen en unieke informatie
   testKolommenVeld(d_veld)
@@ -75,7 +75,7 @@ QC3a <- function(d_veld, d_metingen, verbose = F) {
       dplyr::filter(oordeel == "verdacht") %>%
       dplyr::distinct(qcid) %>%
       dplyr::pull(qcid)
-  test <- "QC3a"
+  test <- "QC1_new_a"
 
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
