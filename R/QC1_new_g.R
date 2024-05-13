@@ -1,4 +1,4 @@
-#' QC1e. Controle ontbreken analysegegevens
+#' QC1_new_g. Controle ontbreken analysegegevens
 #'
 #' Controle op aanwezigheid van analysegegevens voor alle genomen monsters
 #'
@@ -17,7 +17,7 @@
 #'
 
 
-QC1e <- function(d_metingen, verbose = F) {
+QC1_new_g <- function(d_metingen, verbose = F) {
   
   # Check datasets op kolommen en unieke informatie
   testKolommenMetingen(d_metingen)
@@ -50,7 +50,7 @@ QC1e <- function(d_metingen, verbose = F) {
 
   # voeg attribute met uitkomsten tests toe aan relevante dataset (d_metingen)
   verdacht_id <- resultaat_df$qcid 
-  test <- "QC1e"
+  test <- "QC1_new_g"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
