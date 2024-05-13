@@ -1,4 +1,4 @@
-#' QC0g. Controle zoet-zout grondwater
+#' QC0_new_f. Controle zoet-zout grondwater
 #'
 #' Controle op de chloridegegevens en of er sprake is van
 #' eenheidsfouten.
@@ -22,7 +22,7 @@
 #'
 
 
-QC0g <- function(d_filter, d_metingen, verbose = F) {
+QC0_new_f <- function(d_filter, d_metingen, verbose = F) {
   
   # Check datasets
   testKolommenFilter(d_filter)
@@ -91,7 +91,7 @@ QC0g <- function(d_filter, d_metingen, verbose = F) {
   
   # voeg attribute met uitkomsten tests toe aan relevante dataset (d_metingen)
   verdacht_id <- resultaat_df$qcid
-  test <- "QC0g"
+  test <- "QC0_new_f"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
