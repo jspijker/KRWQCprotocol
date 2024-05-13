@@ -1,4 +1,4 @@
-#' QC4b. Controle technisch waardebereik
+#' QC4_new_d. Controle technisch waardebereik
 #'
 #' Controleer of een meting fysisch niet mogelijk is.
 #'      
@@ -25,7 +25,7 @@
 #'
 
 
-QC4b <- function(d_metingen, ph_veld_naam = "pH_veld", verbose = F) {
+QC4_new_d <- function(d_metingen, ph_veld_naam = "pH_veld", verbose = F) {
   
   # Check datasets op kolommen en unieke informatie
   testKolommenMetingen(d_metingen)
@@ -90,7 +90,7 @@ QC4b <- function(d_metingen, ph_veld_naam = "pH_veld", verbose = F) {
     dplyr::distinct(qcid) %>%
     pull(qcid)
   
-  test <- "QC4b"
+  test <- "QC4_new_d"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
