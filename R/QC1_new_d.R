@@ -1,5 +1,5 @@
 
-#' QC1b. Controle apparaat, techniek en procedure BRO
+#' QC1_new_d. Controle apparaat, techniek en procedure BRO
 #'
 #' Controle op bemonsteringsapparaat, bemonsteringsprocedure,
 #' waardebepalingstechniek en waardebepalingsprocedure
@@ -24,7 +24,7 @@
 #'
 
 
-QC1b <- function(d_veld, d_parameter, d_metingen, verbose = F) {
+QC1_new_d <- function(d_veld, d_parameter, d_metingen, verbose = F) {
 
     # laad opzoektabellen uit de BRO
     data(BRO_bemonsteringsapparaat)
@@ -107,7 +107,7 @@ verdacht_id <- resultaat_df %>%
     dplyr::distinct(qcid) %>%
     dplyr::pull(qcid)
 
-test <- "QC1b"
+test <- "QC1_new_d"
 
 d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                 test = test,
