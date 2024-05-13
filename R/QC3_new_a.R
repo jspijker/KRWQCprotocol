@@ -1,4 +1,4 @@
-#' QC4a. Controle consistentie metingen met historische gegevens
+#' QC3_new_a. Controle consistentie metingen met historische gegevens
 #'
 #' Beoordeling waarschijnlijk meting op basis van consistentie
 #' met historische gegevens. 
@@ -35,7 +35,7 @@
 #'
 
 
-QC4a <- function(d_metingen, d_parameter, 
+QC3_new_a <- function(d_metingen, d_parameter, 
                  meetronde = max(d_metingen$jaar), 
                  zscore = 3.5,
                  plt = T, plt_put_reeks = F,
@@ -81,7 +81,7 @@ QC4a <- function(d_metingen, d_parameter,
                            "metingen waar de afwijking >", zscore, "standaarddeviaties",
                            "is t.o.v. de historische meetreeks en totaal",
                            nrow(d %>% dplyr::filter(oordeel == "niet uitvoerbaar")),
-                           "metingen waar QC4a niet uitvoerbaar is")
+                           "metingen waar QC3_new_a niet uitvoerbaar is")
   
   if(verbose) {
     if(nrow(d %>% dplyr::filter(oordeel %in% c("twijfelachtig", "niet uitvoerbaar"))) > 0 ) {
@@ -262,7 +262,7 @@ QC4a <- function(d_metingen, d_parameter,
     dplyr::distinct(qcid) %>%
     dplyr::pull(qcid)
   
-  test <- "QC4a"
+  test <- "QC3_new_a"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
