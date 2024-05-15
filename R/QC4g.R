@@ -1,4 +1,4 @@
-#' QC4_new_g. Controle NO3 en NH4
+#' QC4g. Controle NO3 en NH4
 #'
 #' Controleer relatie NO3 en NH4
 #' 
@@ -20,7 +20,7 @@
 #' @export
 #'
 
-QC4_new_g <- function(d_metingen, verbose = F) {
+QC4g <- function(d_metingen, verbose = F) {
 
     # Test of relevante kolommen aanwezig zijn
     # deze hulpfuncties staan in utils, deze eerst nu nog runnen.
@@ -90,7 +90,7 @@ QC4_new_g <- function(d_metingen, verbose = F) {
         dplyr::distinct(qcid) %>%
         dplyr::pull(qcid)
 
-    test <- "QC4_new_g"
+    test <- "QC4g"
 
     d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                     test = test,
