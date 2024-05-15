@@ -1,4 +1,4 @@
-#' QC1_new_b. Controle registratie putfilter in de BRO
+#' QC1b. Controle registratie putfilter in de BRO
 #'
 #' Controleer of de betreffende putfilter is opgenomen in de BRO. 
 #' 
@@ -19,7 +19,7 @@
 #' @export
 #'
 
-QC1_new_b <- function(d_filter, d_metingen, verbose = F) {
+QC1b <- function(d_filter, d_metingen, verbose = F) {
   
   warning(paste0("Dit is een tijdelijke functie waarbij handmatige ",
                  "input vereist is van putcodes welke niet in de ", 
@@ -66,7 +66,7 @@ QC1_new_b <- function(d_filter, d_metingen, verbose = F) {
   
   # voeg attribute met uitkomsten tests toe aan relevante dataset (d_metingen)
   verdacht_id <- resultaat_df$qcid
-  test <- "QC1_new_b"
+  test <- "QC1b"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
