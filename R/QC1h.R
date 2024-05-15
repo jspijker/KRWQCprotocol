@@ -1,4 +1,4 @@
-#' QC1_new_h. Controle negatieve waarden
+#' QC1h. Controle negatieve waarden
 #'
 #' Controle op aanwezigheid van negatieve waarden
 #'
@@ -17,7 +17,7 @@
 #'
 
 
-QC1_new_h <- function(d_metingen, verbose = F) {
+QC1h <- function(d_metingen, verbose = F) {
   
   # Check datasets op kolommen en unieke informatie
   testKolommenMetingen(d_metingen)
@@ -49,7 +49,7 @@ QC1_new_h <- function(d_metingen, verbose = F) {
   
   # voeg attribute met uitkomsten tests toe aan relevante dataset (d_metingen)
   verdacht_id <- resultaat_df$qcid 
-  test <- "QC1_new_h"
+  test <- "QC1h"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
