@@ -1,4 +1,4 @@
-#' QC4_new_b. Controle EC-veld en EC-lab
+#' QC4b. Controle EC-veld en EC-lab
 #'
 #' Vergelijk EC-veld en EC-lab
 #'
@@ -23,7 +23,7 @@
 #'
 
 
-QC4_new_b <- function(d_metingen, d_parameter, geleidendheid_veld_naam = "GELDHD_VELD", verbose = F) {
+QC4b <- function(d_metingen, d_parameter, geleidendheid_veld_naam = "GELDHD_VELD", verbose = F) {
     
     # Check datasets op kolommen en unieke informatie
     testKolommenMetingen(d_metingen)
@@ -94,7 +94,7 @@ QC4_new_b <- function(d_metingen, d_parameter, geleidendheid_veld_naam = "GELDHD
         dplyr::filter(oordeel == "twijfelachtig") %>% 
         dplyr::distinct(qcid)
     
-    test <- "QC4_new_b"
+    test <- "QC4b"
     
     d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                     test = test,
