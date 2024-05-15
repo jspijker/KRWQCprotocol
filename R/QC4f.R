@@ -1,4 +1,4 @@
-#' QC4_new_f. Controle pH en HCO3
+#' QC4f. Controle pH en HCO3
 #'
 #' Controleer relatie pH en HCO3
 #' 
@@ -22,7 +22,7 @@
 #' @export
 #'
 
-QC4_new_f <- function(d_metingen, verbose = F) {
+QC4f <- function(d_metingen, verbose = F) {
   
   # Test of relevante kolommen aanwezig zijn
   # deze hulpfuncties staan in utils, deze eerst nu nog runnen.
@@ -46,7 +46,7 @@ QC4_new_f <- function(d_metingen, verbose = F) {
   
   # Check of maar 1 voor pH en 1 voor HCO3 beschikbaar zijn
   if(dplyr::n_distinct(d$parameter) < 2) {
-    stop("Geen pH of HCO3 beschikbaar. Gebruik: x <- QC_niet_uitvoerbaar(x, \"QC4_new_f\")")
+    stop("Geen pH of HCO3 beschikbaar. Gebruik: x <- QC_niet_uitvoerbaar(x, \"QC4f\")")
   }
   if(dplyr::n_distinct(d$parameter) > 2) {
     stop("Meer dan 2 parameters voor pH en HCO3")
@@ -106,7 +106,7 @@ QC4_new_f <- function(d_metingen, verbose = F) {
     dplyr::distinct(qcid) %>% 
     dplyr::pull(qcid)
   
-  test <- "QC4_new_f"
+  test <- "QC4f"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
