@@ -1,4 +1,4 @@
-#' QC1_new_e. Controle rapportagegrens
+#' QC1e. Controle rapportagegrens
 #'
 #' Controle op aanwezigheid rapportagegrens en detectiesymbool
 #'
@@ -18,7 +18,7 @@
 #'
 
 
-QC1_new_e <- function(d_metingen, verbose = F) {
+QC1e <- function(d_metingen, verbose = F) {
   
   # Check datasets op kolommen en unieke informatie
   testKolommenMetingen(d_metingen)
@@ -67,7 +67,7 @@ QC1_new_e <- function(d_metingen, verbose = F) {
     dplyr::distinct(qcid) %>%
     dplyr::pull(qcid)
   
-  test <- "QC1_new_e"
+  test <- "QC1e"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
