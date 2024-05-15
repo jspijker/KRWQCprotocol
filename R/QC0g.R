@@ -1,4 +1,4 @@
-#' QC0_new_g. Controle redoxklasse grondwater
+#' QC0g. Controle redoxklasse grondwater
 #'
 #' Controle op fouten in de redoxparameters
 #'    
@@ -19,7 +19,7 @@
 #'
 
 
-QC0_new_g <- function(d_filter, d_metingen, verbose = F) {
+QC0g <- function(d_filter, d_metingen, verbose = F) {
   
   # Check datasets
   testKolommenFilter(d_filter)
@@ -162,7 +162,7 @@ QC0_new_g <- function(d_filter, d_metingen, verbose = F) {
   # voeg attribute met uitkomsten tests toe aan relevante dataset (d_metingen)
   twijfel_id <- resultaat_df %>% filter(oordeel == "twijfelachtig") %>% distinct(qcid) %>% pull(qcid)
   verdacht_id <- resultaat_df %>% filter(oordeel == "verdacht") %>% distinct(qcid) %>% pull(qcid)
-  test <- "QC0_new_g"
+  test <- "QC0g"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
