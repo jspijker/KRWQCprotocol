@@ -1,4 +1,4 @@
-#' QC4_new_e. Controle pH-veld en pH-lab
+#' QC4e. Controle pH-veld en pH-lab
 #'
 #' Vergelijk pH-veld en pH-lab
 #'
@@ -19,7 +19,7 @@
 #'
 
 
-QC4_new_e <- function(d_veld, d_metingen, ph_veld_naam = "pH_veld", verbose = F) {
+QC4e <- function(d_veld, d_metingen, ph_veld_naam = "pH_veld", verbose = F) {
   
   # Check datasets op kolommen en unieke informatie
   testKolommenVeld(d_veld)
@@ -39,7 +39,7 @@ QC4_new_e <- function(d_veld, d_metingen, ph_veld_naam = "pH_veld", verbose = F)
   
   # Check of pH veld en lab gegevens beschikbaar zijn
   if(dplyr::n_distinct(d$parameter) < 2) {
-    stop("Geen veld of lab pH aanwezig. Gebruik: x <- QC_niet_uitvoerbaar(x, \"QC4_new_e\")")
+    stop("Geen veld of lab pH aanwezig. Gebruik: x <- QC_niet_uitvoerbaar(x, \"QC4e\")")
   }
   if(dplyr::n_distinct(d$parameter) > 2) {
     stop("Meer dan 2 parameters voor veld en lab pH")
@@ -92,7 +92,7 @@ QC4_new_e <- function(d_veld, d_metingen, ph_veld_naam = "pH_veld", verbose = F)
     dplyr::distinct(qcid) %>% 
     dplyr::pull(qcid)
   
-  test <- "QC4_new_e"
+  test <- "QC4e"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
