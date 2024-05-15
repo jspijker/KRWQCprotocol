@@ -1,4 +1,4 @@
-#' QC4_new_a. Controle ionenbalans
+#' QC4a. Controle ionenbalans
 #'
 #' Controle en berekening van de ionenbalans (IB)
 #' op monsterniveau
@@ -25,7 +25,7 @@
 #'
 
 
-QC4_new_a <- function(d_metingen, ph_naam = "pH", hco3_naam = "HCO3", verbose = F) {
+QC4a <- function(d_metingen, ph_naam = "pH", hco3_naam = "HCO3", verbose = F) {
   
   # Check datasets op kolommen en unieke informatie
   testKolommenMetingen(d_metingen)
@@ -155,7 +155,7 @@ QC4_new_a <- function(d_metingen, ph_naam = "pH", hco3_naam = "HCO3", verbose = 
     dplyr::distinct(qcid) %>% 
     dplyr::pull(qcid)
   
-  test <- "QC4_new_a"
+  test <- "QC4a"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
