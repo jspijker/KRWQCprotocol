@@ -22,7 +22,7 @@
 #'
 
 
-QC0e <- function(d_veld, d_filter, d_metingen, fl = 2, verbose = F) {
+QC0e <- function(d_veld, d_filter, d_metingen, fl = 1, verbose = F) {
   
   # Check datasets
   testKolommenVeld(d_veld)
@@ -34,19 +34,22 @@ QC0e <- function(d_veld, d_filter, d_metingen, fl = 2, verbose = F) {
     select(monsterid, putcode, filter, okf) 
   
   # Vergelijk filterdiepte met opzoektabel van aangeleverde BRO data
-  # Nu genomen dat okf zowel niet ondieper als dieper mag liggen. Wijkt af van protocol!
+  # Nu genomen dat okf zowel niet ondieper als dieper mag liggen.
   res <- merge(d, d_filter %>% select(qcid, putcode, filter, diepte_onder), 
                by = c("putcode", "filter")) %>%
     mutate(oordeel = ifelse(abs(okf - diepte_onder) > 0.5 * fl,  
-                            "verdacht", "onverdacht"),
+                            "twijfelachtig", "onverdacht"),
            iden = monsterid) %>%
-    filter(oordeel == "verdacht") %>%
+    filter(oordeel == "twijfelachtig") %>%
     rename(`onderkant filter_val` = okf,
            `onderkant filter_BRO` = diepte_onder)
   
   rapportageTekst <- paste("Er zijn in totaal", nrow(res), 
-                           "bemonsterde putfilters met afwijkende filterdieptes",
-                           "van de BRO geregistreerde putcoordinaten.")
+                           "bemonsterde putfilters met >", 0.5 * fl ,"m afwijkende filterdieptes",
+                           "t.o.v. de BRO geregistreerde putcoordinaten.",
+                           "Controleer of het juiste filter bemonsterd is.",
+                           "Controleer de lengte van de putfilters.",
+                           "Controleer de registratie in de BRO.")
   
   # Als er een afwijkende filterdiepte is, print deze
   if(verbose) {
@@ -76,13 +79,13 @@ QC0e <- function(d_veld, d_filter, d_metingen, fl = 2, verbose = F) {
            `onderkant filter_val`, `onderkant filter_BRO`, oordeel)
   
   # voeg attribute met uitkomsten tests toe aan relevante dataset (d_metingen)
-  verdacht_id <- resultaat_df$qcid
+  twijfel_id <- resultaat_df$qcid
   test <- "QC0e"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
                                   oordeel = "twijfelachtig",
-                                  ids = verdacht_id)
+                                  ids = twijfel_id)
   d_metingen <- qcout_add_rapportage(obj = d_metingen,
                                      test = test,
                                      tekst = rapportageTekst)
