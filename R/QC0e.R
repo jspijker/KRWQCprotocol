@@ -1,6 +1,7 @@
-#' QC0e. Controle filter
+#' QC0e. Controle filter en filterdiepte
 #'
-#' Controle op bemonstering van het juiste filter.
+#' Controle op bemonstering van het juiste filter, op de meetfout in de filterdiepte
+#' of de aanwezigheid van sediment in het filter.
 #' 
 #' Als de diepte onderkant filter (okf) meer dan de helft van de 
 #' filterlengte (meestal 1-2 meter) afwijkt dan in de BRO 
@@ -12,7 +13,7 @@
 #' @param d_metingen metingen bestand met monster ID's om bij verkeerde filterbemonstering 
 #' te kunnen markeren.
 #' @param fl filterlengte. Meestal is dit 1-2 meter. Standaard ingevuld is 
-#' nu 2 meter, maar dit kan aangepast worden met deze parameter.
+#' nu 1 meter, maar dit kan aangepast worden met deze parameter.
 #' @param verbose of tekstuele output uit script gewenst is (T) of niet (F). Staat
 #' standaard op F.
 #'
@@ -31,17 +32,17 @@ QC0e <- function(d_veld, d_filter, d_metingen, fl = 1, verbose = F) {
   
   # Selecteer alleen putcode, filter, datum, okf
   d <- d_veld %>%
-    select(monsterid, putcode, filter, okf) 
+    dplyr::select(monsterid, putcode, filter, okf) 
   
   # Vergelijk filterdiepte met opzoektabel van aangeleverde BRO data
   # Nu genomen dat okf zowel niet ondieper als dieper mag liggen.
-  res <- merge(d, d_filter %>% select(qcid, putcode, filter, diepte_onder), 
+  res <- merge(d, d_filter %>% dplyr::select(qcid, putcode, filter, diepte_onder), 
                by = c("putcode", "filter")) %>%
-    mutate(oordeel = ifelse(abs(okf - diepte_onder) > 0.5 * fl,  
+    dplyr::mutate(oordeel = ifelse(abs(okf - diepte_onder) > 0.5 * fl,  
                             "twijfelachtig", "onverdacht"),
            iden = monsterid) %>%
-    filter(oordeel == "twijfelachtig") %>%
-    rename(`onderkant filter_val` = okf,
+    dplyr::filter(oordeel == "twijfelachtig") %>%
+    dplyr::rename(`onderkant filter_val` = okf,
            `onderkant filter_BRO` = diepte_onder)
   
   rapportageTekst <- paste("Er zijn in totaal", nrow(res), 
@@ -57,7 +58,7 @@ QC0e <- function(d_veld, d_filter, d_metingen, fl = 1, verbose = F) {
       write.table(
         rapportageTekst,
         row.names = F, col.names = F)
-      print(res %>% select(putcode, filter,
+      print(res %>% dplyr::select(putcode, filter,
                            `onderkant filter_val`,
                            `onderkant filter_BRO`))
       
@@ -69,13 +70,13 @@ QC0e <- function(d_veld, d_filter, d_metingen, fl = 1, verbose = F) {
   
   # voeg concept oordeel van afwijkende putten toe aan monsters op die locaties in betreffende meetronde
   resultaat_df <- d_metingen %>%
-    group_by(monsterid) %>%
-    mutate(iden = monsterid) %>%
-    mutate(oordeel = ifelse(iden %in% res$iden,
+    dplyr::group_by(monsterid) %>%
+    dplyr::mutate(iden = monsterid) %>%
+    dplyr::mutate(oordeel = ifelse(iden %in% res$iden,
                             "twijfelachtig", "onverdacht")) %>%
-    filter(oordeel == "twijfelachtig") %>%
-    left_join(., res %>% select(iden, `onderkant filter_val`, `onderkant filter_BRO`), by = "iden") %>%
-    select(qcid, monsterid, jaar, maand, dag, putcode, filter,
+    dplyr::filter(oordeel == "twijfelachtig") %>%
+    dplyr::left_join(., res %>% dplyr::select(iden, `onderkant filter_val`, `onderkant filter_BRO`), by = "iden") %>%
+    dplyr::select(qcid, monsterid, jaar, maand, dag, putcode, filter,
            `onderkant filter_val`, `onderkant filter_BRO`, oordeel)
   
   # voeg attribute met uitkomsten tests toe aan relevante dataset (d_metingen)
