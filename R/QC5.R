@@ -30,7 +30,7 @@ QC5 <- function(d_metingen, verbose = F) {
   
   if(qcout_attrexists(d_metingen)){
     # Lijst met alle QC namen
-    qcn <- c("QC0a", "QC0b", "QC0c", "QC0d", "QC0e", "QC0_new_f", "QC0g", 
+    qcn <- c("QC0a", "QC0b", "QC0c", "QC0d", "QC0e", "QC0f", "QC0g", 
              "QC1c", "QC1d", "QC1e", "QC1g", "QC1h", 
              "QC2a", "QC2b", "QC2c",
              "QC1a", "QC1b", "QC4a", "QC4b", "QC4c", "QC4e", "QC4f", "QC4g", 
