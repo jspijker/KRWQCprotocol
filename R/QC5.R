@@ -30,17 +30,17 @@ QC5 <- function(d_metingen, verbose = F) {
   
   if(qcout_attrexists(d_metingen)){
     # Lijst met alle QC namen
-    qcn <- c("QC0a", "QC0b", "QC0c", "QC0d", "QC0e", "QC0f", "QC0_new_f", "QC0_new_g", 
-             "QC1_new_c", "QC1_new_d", "QC1_new_e", "QC1_new_g", "QC1_new_h", 
+    qcn <- c("QC0a", "QC0b", "QC0c", "QC0d", "QC0e", "QC0f", "QC0_new_f", "QC0g", 
+             "QC1c", "QC1d", "QC1e", "QC1g", "QC1h", 
              "QC2a", "QC2b", "QC2c",
-             "QC1_new_a", "QC1_new_b", "QC4_new_a", "QC4_new_b", "QC4_new_c", "QC4_new_e", "QC4_new_f", "QC4_new_g", 
-             "QC3_new_a", "QC4_new_d")
+             "QC1a", "QC1b", "QC4a", "QC4b", "QC4c", "QC4e", "QC4f", "QC4g", 
+             "QC3a", "QC4d")
     # Lijst met minimaal benodigde QC namen
     qcn_req <- c("QC0a", "QC0c", "QC0d", "QC0e", 
-                 "QC1_new_h", 
+                 "QC1h", 
                  "QC2a", "QC2b", "QC2c",
-                 "QC4_new_a", "QC4_new_b", "QC4_new_c", "QC4_new_e", "QC4_new_f", "QC4_new_g", 
-                 "QC3_new_a", "QC4_new_d")
+                 "QC4a", "QC4b", "QC4c", "QC4e", "QC4f", "QC4g", 
+                 "QC3a", "QC4d")
     
     # Controleer of alle namen voorkomen in d_metingen
     x_attr <- attr(d_metingen, "qcout")
@@ -79,13 +79,13 @@ QC5 <- function(d_metingen, verbose = F) {
   # ids afgekeurd
   ids_a1 <- if ("QC0a" %in% qcn_ind) {d %>% filter(QC0a == "verdacht") %>% pull(qcid)}
   ids_a2 <- if ("QC0e" %in% qcn_ind) {d %>% filter(QC0e == "twijfelachtig") %>% pull(qcid)}
-  ids_a3 <- if ("QC1_new_h" %in% qcn_ind) {d %>% filter(QC1_new_h == "verdacht") %>% pull(qcid)}
-  ids_a4 <- if (all(c("QC2a", "QC3_new_a") %in% qcn_ind)) {d %>% filter(QC2a == "verdacht" & QC3_new_a == "twijfelachtig") %>% pull(qcid)}
-  ids_a5 <- if ("QC4_new_d" %in% qcn_ind) {d %>% filter(QC4_new_d == "verdacht") %>% pull(qcid)}
+  ids_a3 <- if ("QC1h" %in% qcn_ind) {d %>% filter(QC1h == "verdacht") %>% pull(qcid)}
+  ids_a4 <- if (all(c("QC2a", "QC3a") %in% qcn_ind)) {d %>% filter(QC2a == "verdacht" & QC3a == "twijfelachtig") %>% pull(qcid)}
+  ids_a5 <- if ("QC4d" %in% qcn_ind) {d %>% filter(QC4d == "verdacht") %>% pull(qcid)}
   
   # ids onbeslist
-  if("QC3_new_a" %in% qcn_ind){
-    v <- d %>% filter(QC3_new_a == "twijfelachtig")
+  if("QC3a" %in% qcn_ind){
+    v <- d %>% filter(QC3a == "twijfelachtig")
     ids_o1 <- if ("QC0a" %in% qcn_ind) {v %>% filter(QC0a == "niet uitvoerbaar") %>% pull(qcid)}
     ids_o2 <- if ("QC0c" %in% qcn_ind) {v %>% filter(QC0c == "twijfelachtig" | QC0c == "niet uitvoerbaar") %>% pull(qcid)}
     ids_o3 <- if ("QC0d" %in% qcn_ind) {v %>% filter(QC0d == "twijfelachtig" | QC0d == "niet uitvoerbaar") %>% pull(qcid)}
@@ -93,12 +93,12 @@ QC5 <- function(d_metingen, verbose = F) {
     ids_o5 <- if ("QC2a" %in% qcn_ind) {v %>% filter(QC2a == "twijfelachtig" | QC2a == "niet uitvoerbaar") %>% pull(qcid)}
     ids_o6 <- if ("QC2b" %in% qcn_ind) {v %>% filter(QC2b == "twijfelachtig") %>% pull(qcid)}
     ids_o7 <- if ("QC2c" %in% qcn_ind) {v %>% filter(QC2c == "twijfelachtig") %>% pull(qcid)}
-    ids_o8 <- if ("QC4_new_a" %in% qcn_ind) {v %>% filter(QC4_new_a == "twijfelachtig" | QC4_new_a == "niet uitvoerbaar") %>% pull(qcid)}
-    ids_o9 <- if ("QC4_new_b" %in% qcn_ind) {v %>% filter(QC4_new_b == "niet uitvoerbaar") %>% pull(qcid)}
-    ids_o10 <- if ("QC4_new_c" %in% qcn_ind) {v %>% filter(QC4_new_c == "niet uitvoerbaar") %>% pull(qcid)}
-    ids_o11 <- if ("QC4_new_e" %in% qcn_ind) {v %>% filter(QC4_new_e == "niet uitvoerbaar") %>% pull(qcid)}
-    ids_o12 <- if ("QC4_new_f" %in% qcn_ind) {v %>% filter(QC4_new_f == "twijfelachtig" | QC4_new_f == "niet uitvoerbaar") %>% pull(qcid)}
-    ids_o13 <- if ("QC4_new_g" %in% qcn_ind) {v %>% filter(QC4_new_g == "twijfelachtig" | QC4_new_g == "niet uitvoerbaar") %>% pull(qcid)}
+    ids_o8 <- if ("QC4a" %in% qcn_ind) {v %>% filter(QC4a == "twijfelachtig" | QC4a == "niet uitvoerbaar") %>% pull(qcid)}
+    ids_o9 <- if ("QC4b" %in% qcn_ind) {v %>% filter(QC4b == "niet uitvoerbaar") %>% pull(qcid)}
+    ids_o10 <- if ("QC4c" %in% qcn_ind) {v %>% filter(QC4c == "niet uitvoerbaar") %>% pull(qcid)}
+    ids_o11 <- if ("QC4e" %in% qcn_ind) {v %>% filter(QC4e == "niet uitvoerbaar") %>% pull(qcid)}
+    ids_o12 <- if ("QC4f" %in% qcn_ind) {v %>% filter(QC4f == "twijfelachtig" | QC4f == "niet uitvoerbaar") %>% pull(qcid)}
+    ids_o13 <- if ("QC4g" %in% qcn_ind) {v %>% filter(QC4g == "twijfelachtig" | QC4g == "niet uitvoerbaar") %>% pull(qcid)}
     ids_o14 <- v %>% pull(qcid)
   } else {
     for(i in 1:14) {
@@ -112,24 +112,24 @@ QC5 <- function(d_metingen, verbose = F) {
     # Afgekeurd
     tibble(ids = length(ids_a1), oordeel = "afgekeurd", QC0a = "verdacht"),
     tibble(ids = length(ids_a2), oordeel = "afgekeurd", QC0e = "twijfelachtig"),
-    tibble(ids = length(ids_a3), oordeel = "afgekeurd", QC1_new_h = "verdacht"),
-    tibble(ids = length(ids_a4), oordeel = "afgekeurd", QC2a = "verdacht", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_a5), oordeel = "afgekeurd", QC4_new_d = "verdacht"),
+    tibble(ids = length(ids_a3), oordeel = "afgekeurd", QC1h = "verdacht"),
+    tibble(ids = length(ids_a4), oordeel = "afgekeurd", QC2a = "verdacht", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_a5), oordeel = "afgekeurd", QC4d = "verdacht"),
     # Onbeslist
-    tibble(ids = length(ids_o1), oordeel = "onbeslist", QC0a = "niet uitvoerbaar", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o2), oordeel = "onbeslist", QC0c = "twijfelachtig of niet uitvoerbaar", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o3), oordeel = "onbeslist", QC0d = "twijfelachtig of niet uitvoerbaar", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o4), oordeel = "onbeslist", QC0e = "niet uitvoerbaar", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o5), oordeel = "onbeslist", QC2a = "twijfelachtig of niet uitvoerbaar", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o6), oordeel = "onbeslist", QC2b = "twijfelachtig", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o7), oordeel = "onbeslist", QC2c = "twijfelachtig", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o8), oordeel = "onbeslist", QC4_new_a = "twijfelachtig of niet uitvoerbaar", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o9), oordeel = "onbeslist", QC4_new_b = "niet uitvoerbaar", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o10), oordeel = "onbeslist", QC4_new_c = "niet uitvoerbaar", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o11), oordeel = "onbeslist", QC4_new_e = "niet uitvoerbaar", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o12), oordeel = "onbeslist", QC4_new_f = "twijfelachtig of niet uitvoerbaar", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o13), oordeel = "onbeslist", QC4_new_g = "twijfelachtig of niet uitvoerbaar", QC3_new_a = "twijfelachtig"),
-    tibble(ids = length(ids_o14), oordeel = "onbeslist", QC3_new_a = "twijfelachtig"),
+    tibble(ids = length(ids_o1), oordeel = "onbeslist", QC0a = "niet uitvoerbaar", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o2), oordeel = "onbeslist", QC0c = "twijfelachtig of niet uitvoerbaar", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o3), oordeel = "onbeslist", QC0d = "twijfelachtig of niet uitvoerbaar", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o4), oordeel = "onbeslist", QC0e = "niet uitvoerbaar", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o5), oordeel = "onbeslist", QC2a = "twijfelachtig of niet uitvoerbaar", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o6), oordeel = "onbeslist", QC2b = "twijfelachtig", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o7), oordeel = "onbeslist", QC2c = "twijfelachtig", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o8), oordeel = "onbeslist", QC4a = "twijfelachtig of niet uitvoerbaar", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o9), oordeel = "onbeslist", QC4b = "niet uitvoerbaar", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o10), oordeel = "onbeslist", QC4c = "niet uitvoerbaar", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o11), oordeel = "onbeslist", QC4e = "niet uitvoerbaar", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o12), oordeel = "onbeslist", QC4f = "twijfelachtig of niet uitvoerbaar", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o13), oordeel = "onbeslist", QC4g = "twijfelachtig of niet uitvoerbaar", QC3a = "twijfelachtig"),
+    tibble(ids = length(ids_o14), oordeel = "onbeslist", QC3a = "twijfelachtig"),
   )
   
   res <- res[, order(colnames(res))]
