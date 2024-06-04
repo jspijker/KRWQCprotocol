@@ -3,17 +3,14 @@
 #' Controle op bemonstering van het juiste filter, op de meetfout in de filterdiepte
 #' of de aanwezigheid van sediment in het filter.
 #' 
-#' Als de diepte onderkant filter (okf) meer dan de helft van de 
-#' filterlengte (meestal 1-2 meter) afwijkt dan in de BRO 
-#' geregistreerde diepte, markeer de waarde als verdacht. 
+#' Als de diepte onderkant filter (okf) meer dan 50 centimeter afwijkt dan in de BRO 
+#' geregistreerde diepte, markeer de waarde als twijfelachtig. 
 #'
 #' @param d_veld dataframe met putcode en filterdiepte waargenomen in het veld
 #' voor het bemonsterde jaar X.
 #' @param d_filter BRO geregisteerde metadata behorende bij de putcode.
 #' @param d_metingen metingen bestand met monster ID's om bij verkeerde filterbemonstering 
 #' te kunnen markeren.
-#' @param fl filterlengte. Meestal is dit 1-2 meter. Standaard ingevuld is 
-#' nu 1 meter, maar dit kan aangepast worden met deze parameter.
 #' @param verbose of tekstuele output uit script gewenst is (T) of niet (F). Staat
 #' standaard op F.
 #'
@@ -23,7 +20,7 @@
 #'
 
 
-QC0e <- function(d_veld, d_filter, d_metingen, fl = 1, verbose = F) {
+QC0e <- function(d_veld, d_filter, d_metingen, verbose = F) {
   
   # Check datasets
   testKolommenVeld(d_veld)
@@ -38,7 +35,7 @@ QC0e <- function(d_veld, d_filter, d_metingen, fl = 1, verbose = F) {
   # Nu genomen dat okf zowel niet ondieper als dieper mag liggen.
   res <- merge(d, d_filter %>% dplyr::select(qcid, putcode, filter, diepte_onder), 
                by = c("putcode", "filter")) %>%
-    dplyr::mutate(oordeel = ifelse(abs(okf - diepte_onder) > 0.5 * fl,  
+    dplyr::mutate(oordeel = ifelse(abs(okf - diepte_onder) > 0.5,  
                             "twijfelachtig", "onverdacht"),
            iden = monsterid) %>%
     dplyr::filter(oordeel == "twijfelachtig") %>%
@@ -46,7 +43,7 @@ QC0e <- function(d_veld, d_filter, d_metingen, fl = 1, verbose = F) {
            `onderkant filter_BRO` = diepte_onder)
   
   rapportageTekst <- paste("Er zijn in totaal", nrow(res), 
-                           "bemonsterde putfilters met >", 0.5 * fl ,"m afwijkende filterdieptes",
+                           "bemonsterde putfilters met >", 0.5 ,"m afwijkende filterdieptes",
                            "t.o.v. de BRO geregistreerde putcoordinaten.",
                            "Controleer of het juiste filter bemonsterd is.",
                            "Controleer de lengte van de putfilters.",
