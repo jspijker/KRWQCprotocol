@@ -29,7 +29,7 @@
 #'  x <- QC0a(d_veld = veld, d_put = put, d_metingen = metingen, verbose = TRUE)
 #'  d <- veld %>% dplyr::filter(landgebruik != "heide")
 #'  x <- QC0b(d_veld = d, d_put = put, d_metingen = x, verbose = FALSE)
-#'  x <- QC0f(d_veld = veld, d_filter = filter, d_metingen = x)
+#'  x <- QC0e(d_veld = veld, d_filter = filter, d_metingen = x)
 #'  x <- QC0_new_f(d_filter = filter, d_metingen = x)
 #'  x <- QC1c(d_parameter = parameter, d_metingen = x)
 #'  x <- QC1d(d_veld = veld, d_parameter = parameter, d_metingen = x)
