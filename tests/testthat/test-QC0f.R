@@ -3,7 +3,7 @@ test_that("QC0f",{
 
 
               data(veld)
-              data(put)
+              data(filter)
               data(metingen)
 
               x <- QC0f(d_veld=veld,d_filter=filter,d_metingen=metingen)
