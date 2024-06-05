@@ -226,7 +226,7 @@ andere functies vervolgens als attribute toegekend aan het metingen bestand.
 ### QC0 - Meetopstelling
 De stappen en functies onder QC0 worden op reguliere wijze uitgevoerd door
 het aanroepen van de betreffende functie en benodigde datasets, met uitzondering
-van QC0c en QC0d zie bovenstaande.
+van QC0c en QC0d, zie bovenstaande.
 
 Voorbeeld voor uitvoeren van QC0a:
 ```{r}
@@ -259,6 +259,14 @@ x <- QC0c(dir = "created_files", d_metingen = x, verbose = TRUE)
 ```
 
 ### QC1 - Data-integriteit
+In QC1b wordt getoetst of de putten in de BRO puttenlijst voorkomen. De bedoeling
+is om d.m.v. een API de puttenlijst uit de BRO automatisch in te laden. Door 
+technische problemen is dit momenteel nog niet mogelijk. Hierdoor is voor QC1b 
+nu een tijdelijke functie opgenomen. Bij deze functie is het op het moment
+noodzakelijk om handmatig de putten uit het metingen bestand te 
+selecteren welke niet in de BRO voorkomen en de subselectie uit het metingen 
+bestand in te voeren in de functie. 
+
 In QC1c wordt de informatie uit de parameter tabel (d_parameter) vergeleken met
 informatie uit de BRO. Binnen het pakket is de meest recente versie van deze
 BRO parameterlijst opgenomen en deze wordt binnen de functie aangeroepen. 
@@ -280,15 +288,39 @@ De stappen en functies onder QC2 worden op reguliere wijze uitgevoerd door
 het aanroepen van de betreffende functie en benodigde datasets, met uitzondering
 van QC2b en QC2c, zie eerder.
 
-### QC3 - Plausibiliteit
-In QC1b wordt getoetst of de putten in de BRO puttenlijst voorkomen. De bedoeling
-is om d.m.v. een API de puttenlijst uit de BRO automatisch in te laden. Door 
-technische problemen is dit momenteel nog niet mogelijk. Hierdoor is voor QC1b 
-nu een tijdelijke functie opgenomen. Bij deze functie is het op het moment
-noodzakelijk om handmatig de putten uit het metingen bestand te 
-selecteren welke niet in de BRO voorkomen en de subselectie uit het metingen 
-bestand in te voeren in de functie. 
+### QC3 - Consistentie
+In QC3a worden de metingen uit de te valideren meetronde gecontroleerd of deze
+consistent zijn met de historische meetreeks. Metingen welke >3.5 sd afwijken 
+worden als afwijkend en twijfelachtig bestempeld. Wanneer een reeks minder dan
+3 metingen heeft is de test niet uitvoerbaar. Vervolgens worden op 2 manieren
+figuren gegenereerd en weggeschreven als attribute aan het metingen bestand 
+om de validatie te kunnen uitvoeren:
 
+- Voor elke parameter worden de metingen log-getransformeerd weergegeven waar
+afijkende metingen uit de te valideren meetronde gekleurd zijn afgebeeld. Hiermee 
+wordt in één opslag duidelijk hoeveel metingen per parameter afwijken en of er 
+eventueel sprake is van eenheidsfouten of structurele afwijkingen in een meetronde.
+- Per twijfelachtige meting wordt de gehele reeks geplot tegelijkertijd met 
+eventuele andere putfilters op die locatie. Zo kunnen mogelijke filterwisselingen
+geidentificeerd worden. 
+
+Voorbeeld voor het maken van een pdf met de afbeeldingen van de parameters:
+```{r eval = FALSE}
+x <- QC3a(d_metingen = x, d_parameter = parameter)
+
+x_attr <- attr(x, "qcout")
+
+ggsave(
+  filename = paste0(getwd(), "/parameters_", Sys.Date(),".pdf"),
+  plot = gridExtra::marrangeGrob(x_attr$QC3a$resultaat$plot_param, nrow = 1, ncol = 1),
+  width = 15, height = 9
+)
+```
+
+
+
+
+### QC4 - Plausibiliteit
 In QC4a wordt de ionenbalans opgesteld. Het is hierdoor belangrijk om de benodigde 
 parameters de juiste naam te geven. In alle QC's wordt er van uitgegaan dat lab 
 parameters genoteerd zijn als aquoqode (zoals in het parameter bestand beschreven). 
@@ -329,45 +361,6 @@ de EC te berekenen om deze uiteindelijk toe te passen. Net zoals bij QC4a hoeven
 de variabelen ph_naam, hco3_naam en ec_naam alleen te worden gespecificeerd als 
 niet de standaard lab waardes (in aquocodes) worden gebruikt.
 
-In QC4e wordt de pH lab met pH veld vergeleken. Benodigde parameternamen zijn 
-"pH" en `ph_veld_naam`. In alle QC's wordt er van uitgegaan dat lab parameters 
-genoteerd zijn als aquoqode (zoals in parameter bestand) dus in dit geval "pH".
-
-In QC4f wordt de pH met hco3 vergeleken. Aangezien in de meeste gevallen hco3
-niet in het veld is bepaald voor de provinciale gegevens, worden nu de lab
-metingen van beiden vergeleken. Benodigde parameternamen zijn "pH" en "HCO3".
-
-In QC4g wordt no3 met nh4 vergeleken. Benodigde parameternamen zijn "NO3" en "NH4". 
-
-### QC4 - Consistentie
-In QC3a worden de metingen uit de te valideren meetronde gecontroleerd of deze
-consistent zijn met de historische meetreeks. Metingen welke >3.5 sd afwijken 
-worden als afwijkend en twijfelachtig bestempeld. Wanneer een reeks minder dan
-3 metingen heeft is de test niet uitvoerbaar. Vervolgens worden op 2 manieren
-figuren gegenereerd en weggeschreven als attribute aan het metingen bestand 
-om de validatie te kunnen uitvoeren:
-
-- Voor elke parameter worden de metingen log-getransformeerd weergegeven waar
-afijkende metingen uit de te valideren meetronde gekleurd zijn afgebeeld. Hiermee 
-wordt in één opslag duidelijk hoeveel metingen per parameter afwijken en of er 
-eventueel sprake is van eenheidsfouten of structurele afwijkingen in een meetronde.
-- Per twijfelachtige meting wordt de gehele reeks geplot tegelijkertijd met 
-eventuele andere putfilters op die locatie. Zo kunnen mogelijke filterwisselingen
-geidentificeerd worden. 
-
-Voorbeeld voor het maken van een pdf met de afbeeldingen van de parameters:
-```{r eval = FALSE}
-x <- QC3a(d_metingen = x, d_parameter = parameter)
-
-x_attr <- attr(x, "qcout")
-
-ggsave(
-  filename = paste0(getwd(), "/parameters_", Sys.Date(),".pdf"),
-  plot = gridExtra::marrangeGrob(x_attr$QC3a$resultaat$plot_param, nrow = 1, ncol = 1),
-  width = 15, height = 9
-)
-```
-
 QC4d wordt regulier uitgevoerd met het aanroepen van QC4d() met metingen data uit
 het LMG als voorbeeld. Bij deze stap word getest of de pH van het veld en de pH
 van het lab niet buiten het meetbereik liggen. De benodigde naam voor pH lab is 
@@ -381,11 +374,23 @@ x <- QC4d(d_metingen = x, ph_veld_naam = "h_5__veld", verbose = TRUE)
 
 ```
 
+In QC4e wordt de pH lab met pH veld vergeleken. Benodigde parameternamen zijn 
+"pH" en `ph_veld_naam`. In alle QC's wordt er van uitgegaan dat lab parameters 
+genoteerd zijn als aquoqode (zoals in parameter bestand) dus in dit geval "pH".
+
+In QC4f wordt de pH met hco3 vergeleken. Aangezien in de meeste gevallen hco3
+niet in het veld is bepaald voor de provinciale gegevens, worden nu de lab
+metingen van beiden vergeleken. Benodigde parameternamen zijn "pH" en "HCO3".
+
+In QC4g wordt no3 met nh4 vergeleken. Benodigde parameternamen zijn "NO3" en "NH4". 
+
+
+
 ### QC5 - QC Status
 In de functie voor QC5 worden de attributes met resultaten van de verschillende
 tests uit het metingen bestand gehaald en bij elkaar gevoegd als één dataframe met 
 `collect_result()`. Het is hierbij belangrijk dat alle minimaal benodigde QC-stappen 
-(QC0a, QC0c t/m QC0e, QC1h, QC2a t/m QC2c, QC4a t/m QC4g", "QC3a" en "QC4d") zijn doorlopen
+(QC0a, QC0c t/m QC0e, QC1h, QC2a t/m QC2c, QC3a en QC4a t/m QC4g) zijn doorlopen
 en dat voor iedere functie hetzelfde metingen bestand als invoer is gebruikt. 
 In dit geval zijn de resultaten uit de verschillende QC tests als attribute aan
 één bestand gekoppeld. Met het verkregen dataframe uit `collect_result()` wordt 
