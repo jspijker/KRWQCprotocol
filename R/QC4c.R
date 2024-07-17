@@ -1,4 +1,4 @@
-#' QC3e. Controle EC-gemeten & EC-berekend
+#' QC4c. Controle EC-gemeten & EC-berekend
 #'
 #' Vergelijking gemeten geleidbaarheid en berekende geleidbaarheid
 #' 
@@ -30,7 +30,7 @@
 #' @export
 #'
 
-QC3e <- function(d_metingen, 
+QC4c <- function(d_metingen, 
                  ph_naam = "pH", 
                  hco3_naam = "HCO3", 
                  ec_naam = "GELDHD",
@@ -149,7 +149,7 @@ QC3e <- function(d_metingen,
   
   # voeg attribute met uitkomsten tests toe aan relevante dataset (d_metingen)
   twijfel_id <- resultaat_df %>% filter(oordeel == "twijfelachtig") %>% distinct(qcid) %>% pull(qcid)
-  test <- "QC3e"
+  test <- "QC4c"
   
   d_metingen <- qcout_add_oordeel(obj = d_metingen,
                                   test = test,
@@ -170,7 +170,7 @@ QC3e <- function(d_metingen,
   
 }
 
-# Onderstaande functies zijn methodes voor de EC berekening in QC3e
+# Onderstaande functies zijn methodes voor de EC berekening in QC4c
 # uit Patricks functies 
 MaakKolomMeth<-function(metveldgemiddelden=dataframeuitLeesData,celcius=celcius,add_bicarbonate=add_bicarbonate,add_phosphate=add_phosphate){
   # voorbereiding van methoden kolom voor ec25 berekening volgens Stuyfzand 
