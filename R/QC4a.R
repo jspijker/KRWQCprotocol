@@ -109,7 +109,7 @@ QC4a <- function(d_metingen, ph_naam = "pH", hco3_naam = "HCO3", verbose = F) {
   
   # bereken ionenbalans
   res <- res %>%
-    dplyr::mutate(pos = Al_meq + Ca_meq + 0.6*Fe_meq + K_meq + Mg_meq + Mn_meq + NH4_meq + Na_meq + Zn_meq + H3O_meq,
+    dplyr::mutate(pos = Al_meq + Ca_meq + Fe_meq + K_meq + Mg_meq + Mn_meq + NH4_meq + Na_meq + Zn_meq + H3O_meq,
                   neg = Cl_meq + HCO3_meq + NO3_meq + SO4_meq + CO3_meq + PO4_meq) %>%
     dplyr::mutate(ib = round(100 * (pos - neg) / (pos + neg), digits = 2)) %>%
     # markeer afwijkingen
