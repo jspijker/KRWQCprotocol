@@ -45,11 +45,16 @@ QC4c <- function(d_metingen,
   
   # aanpassen van opgegeven namen hco3 & ph & EC naar hco3 & hv & ecv. 
   # Dat zijn de drie namen die gebruikt worden in de berekengeleidbaarheid functie
-  d <- d %>%
-    mutate(parameter = str_replace(parameter, ec_naam, "ecv")) %>%
-    mutate(parameter = str_replace(parameter, hco3_naam, "hco3v")) %>%
-    mutate(parameter = str_replace(parameter, ph_naam, "hv"))
-
+  d <- d %>% 
+    dplyr::mutate(
+      parameter = dplyr::case_match(
+        parameter,
+        ec_naam ~ "ecv",
+        hco3_naam ~ "hco3v",
+        ph_naam ~ "hv",
+        .default = parameter
+      )
+    )
 
   # gegevens apart zetten om later qcid weer toe te voegen
   id <- d %>%
@@ -567,7 +572,7 @@ BerekenGeleidbaarheid<-function(metveldgemiddelden=metveldgemiddelden,celcius=25
   h[myrows,'pxecv']=2^-log10(h[myrows,'xecv'])
   h[myrows,'pec25']=2^-log10(h[myrows,'ec25'])
   h$prinslabel=(h$xecv*(1+h$pxecv)<h$ec25*(1-h$pec25))|(h$xecv*(1-h$pxecv)>h$ec25*(1+h$pec25))
-  h$percentageverschil_xecv_ec25=100*(h$xecv-h$ec25)/h$ec25
+  h$percentageverschil_xecv_ec25=200*(h$xecv-h$ec25)/(h$xecv+h$ec25)
 
   metallegeleidbaarheid=h
   mycols=c(names(metveldgemiddelden),'cl','so4','no3','na','k','ca','mg','po4','hco3','xhco3e','pos','neg',
