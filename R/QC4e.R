@@ -2,7 +2,7 @@
 #'
 #' Vergelijk pH-veld en pH-lab
 #'
-#' De signaleringswaarde voor monsters is delta-pH >= 1 pH-eenheden.
+#' De signaleringswaarde voor monsters is delta-pH >= 0.5 pH-eenheden.
 #' Als de delta-pH boven de signaleringswaarde ligt, ken het
 #' concept QC oordeel twijfelachtig toe aan het monster.
 #'         
@@ -27,10 +27,14 @@ QC4e <- function(d_veld, d_metingen, ph_veld_naam = "pH_veld", verbose = F) {
   
   # pH naam aanpassen alleen voor LMG
   d <- d_metingen
-  d <- d %>%  mutate(
-    parameter = case_when(parameter == ph_veld_naam ~ "pH_veld",
-                          TRUE ~ parameter)
-  )
+  d <- d %>% 
+    dplyr::mutate(
+      parameter = dplyr::case_match(
+        parameter,
+        ph_veld_naam ~ "pH_veld",
+        .default = parameter
+      )
+    )
   
   # selecteer pH veld en lab gegevens
   # afhankelijk van de dataset kan dit 'pH' of 'zuurgraad' zijn
@@ -58,13 +62,13 @@ QC4e <- function(d_veld, d_metingen, ph_veld_naam = "pH_veld", verbose = F) {
   res <- res %>% drop_na(c("pH", "pH_veld"))
   
   res <- res %>%
-    dplyr::mutate(oordeel = ifelse(abs(pH - pH_veld) >= 1,
+    dplyr::mutate(oordeel = ifelse(abs(pH - pH_veld) >= .5,
                                    "twijfelachtig", "onverdacht"),
                   iden = monsterid) %>%
     dplyr::filter(oordeel != "onverdacht")
   
   rapportageTekst <- paste("Er zijn in totaal", nrow(res), 
-                           "metingen waar pH-lab en pH-veld 1 pH-eenheden of meer afwijken.",
+                           "metingen waar pH-lab en pH-veld 0.5 pH-eenheden of meer afwijken.",
                            "Controleer de datum (analyse en veld) en historische gegevens van alle afwijkingen")
   
   if(verbose) {
@@ -72,7 +76,7 @@ QC4e <- function(d_veld, d_metingen, ph_veld_naam = "pH_veld", verbose = F) {
       print(rapportageTekst)
       
     } else {
-      print(paste("Er zijn geen metingen waar pH-lab en pH-veld 1 pH-eenheden of meer afwijken"))
+      print(paste("Er zijn geen metingen waar pH-lab en pH-veld 0.5 pH-eenheden of meer afwijken"))
     }
   }
   
