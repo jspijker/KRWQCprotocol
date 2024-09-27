@@ -82,9 +82,9 @@ QC4c <- function(d_metingen,
     # soms staat RG als NA, < of "", eerst NA veranderen in ""
     dplyr::mutate(detectieteken = ifelse(is.na(detectieteken), "", 
                                          detectieteken)) %>%
-    # waardes <RG niet meenemen maar op 0 zetten 
-    dplyr::mutate(waarde_ib = ifelse(!parameter %in% c("h", "hv") & detectieteken != "",
-                                     0, waarde_ib)) %>%
+    # # waardes <RG niet meenemen maar op 0 zetten 
+    # dplyr::mutate(waarde_ib = ifelse(!parameter %in% c("h", "hv") & detectieteken != "",
+    #                                  0, waarde_ib)) %>%
     # als geen pH bekend is, dan is de pH 7 
     dplyr::mutate(waarde_ib = ifelse(parameter %in% c("h", "hv") & is.na(waarde),
                                      7, waarde_ib)) %>%
@@ -262,13 +262,13 @@ MaakKolomMeth<-function(metveldgemiddelden=dataframeuitLeesData,celcius=celcius,
   z$al=0.003 * zm$xal/26.98
   z$zn=0.002*zm$xzn/65.39
   
-  z$po4=3*zm$xpo4/30.97
+  z$po4=3*zm$xpo4/94.9712
   # z bevat geen NAs in plaats daarvan nullen
   
   # nu staan er nog nullen in z$po4
   if (add_phosphate){
     # als z$po4=0 dan gebruiken we zm$xptot
-    z[z$po4==0,'po4']=3*zm[zm$xpo4==0,'xptot']/30.97
+    z[z$po4==0,'po4']=3*zm[zm$xpo4==0,'xptot']/94.9712
   }
   
   # alles omgezet van zm naar z behalve xecv
@@ -579,6 +579,6 @@ BerekenGeleidbaarheid<-function(metveldgemiddelden=metveldgemiddelden,celcius=25
             'ib','percentageverschil_xecv_ec25','ec25','prinslabel','meth','ec25_xecv_sr')
   metgeleidbaarheid=h[,mycols]
 #  save(metgeleidbaarheid,file='metgeleidbaarheid.rda')
-  return(metgeleidbaarheid)
+  return(metallegeleidbaarheid)
 }
 
