@@ -274,7 +274,7 @@ MaakKolomMeth<-function(metveldgemiddelden=dataframeuitLeesData,celcius=celcius,
   # alles omgezet van zm naar z behalve xecv
   
   #  ionbalans
-  z$pos=z$al+z$ca+0.6*z$fe+z$k+z$mg+z$mn+z$nh4+z$na+z$zn+z$h3o
+  z$pos=z$al+z$ca+z$fe+z$k+z$mg+z$mn+z$nh4+z$na+z$zn+z$h3o
   z$neg=z$cl+z$hco3+z$no3+z$so4+z$co3+z$po4
   # wanneer overal nullen staan dan wordt de pH 7 en z$h3o = 0.0001
   z$ib=100*(z$pos-z$neg)/(z$pos+z$neg)
