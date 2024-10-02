@@ -20,7 +20,7 @@
 #'
 
 
-QC0d <- function( dir, d_metingen, verbose = F) {
+QC0d <- function(dir, d_metingen, verbose = F) {
   
   # Deze controle wordt door de beheerders uitgevoerd en bijgehouden
   # Deze informatie is wel benodigd voor het QC status
