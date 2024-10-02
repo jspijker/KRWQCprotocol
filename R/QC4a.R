@@ -63,9 +63,9 @@ QC4a <- function(d_metingen, ph_naam = "pH", hco3_naam = "HCO3", verbose = F) {
     # soms staat RG als NA, < of "", eerst NA veranderen in ""
     dplyr::mutate(detectieteken = ifelse(is.na(detectieteken), "", 
                                          detectieteken)) %>%
-    # waardes <RG niet meenemen maar op 0 zetten 
-    dplyr::mutate(waarde_ib = ifelse(parameter != "pH" & detectieteken != "",
-                                     0, waarde_ib)) %>%
+    # # waardes <RG niet meenemen maar op 0 zetten 
+    # dplyr::mutate(waarde_ib = ifelse(parameter != "pH" & detectieteken != "",
+    #                                  0, waarde_ib)) %>%
     # als geen pH bekend is, dan is de pH 7 
     dplyr::mutate(waarde_ib = ifelse(parameter == "pH" & is.na(waarde),
                                      7, waarde_ib)) %>%
