@@ -38,6 +38,7 @@
 QC3a <- function(d_metingen, d_parameter, 
                  meetronde = max(d_metingen$jaar), 
                  zscore = 3.5,
+                 hco3_veld_naam = NA,
                  plt = T, plt_put_reeks = F,
                  verbose = F) {
   
@@ -46,14 +47,16 @@ QC3a <- function(d_metingen, d_parameter,
   
   # Berekenen statistieken per reeks
   d <- d_metingen %>%
-    # alleen labmetingen meenemen -> Aantal veldmetingen hebben waarde 0
-    # wat mis gaat met log berekening
-    dplyr::filter(!stringr::str_detect(parameter, "veld")) %>%
+    # # alleen labmetingen meenemen -> Aantal veldmetingen hebben waarde 0
+    # # wat mis gaat met log berekening
+    # dplyr::filter(!stringr::str_detect(parameter, "veld")) %>%
     # waardes 0 niet meenemen
-    dplyr::mutate(waarde = ifelse(waarde == 0, NA, waarde)) %>%
+    dplyr::mutate(waarde = ifelse(waarde == 0 & !parameter %in% c("HCO3", hco3_veld_naam), 
+                                  NA, waarde)) %>%
     # verwijder NA's uit waarde kolom
     tidyr::drop_na(waarde) %>%
     # waarde <RG aanpassen naar 0.5 * RG. Geen ROS regressie
+    dplyr::mutate(waarde = ifelse(rapportagegrens > waarde, rapportagegrens, waarde)) %>% 
     dplyr::mutate(waarde = ifelse(detectieteken == "<",
                                   0.5 * waarde, waarde)) %>%
     dplyr::group_by(putcode, filter, parameter) %>%
@@ -61,8 +64,8 @@ QC3a <- function(d_metingen, d_parameter,
     dplyr::mutate(n.meetjaar = dplyr::n_distinct(jaar),
                   n.meting = length(waarde),
                   logobs = log(waarde),
-                  loggem = sapply(1:n(), function(i) mean(log(waarde[-i]))),
-                  logsdv = sapply(1:n(), function(i) sd(log(waarde[-i])))) %>%
+                  loggem = sapply(1:n(), function(i) mean(log(waarde[-i]), na.rm = TRUE)),
+                  logsdv = sapply(1:n(), function(i) sd(log(waarde[-i]), na.rm = TRUE))) %>%
     # bepaal z-score. Indien SD = 0, dan ook z-score = 0
     dplyr::mutate(logz = ifelse(logsdv == 0, 0 ,
                                 (logobs - loggem) / logsdv) ) %>%
