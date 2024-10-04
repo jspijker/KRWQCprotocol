@@ -46,7 +46,7 @@ QC3a <- function(d_metingen, d_parameter,
   testKolommenMetingen(d_metingen)
   
   # Berekenen statistieken per reeks
-  d <- d_metingen %>%
+  d <- d_metingen %>% 
     # # alleen labmetingen meenemen -> Aantal veldmetingen hebben waarde 0
     # # wat mis gaat met log berekening
     # dplyr::filter(!stringr::str_detect(parameter, "veld")) %>%
@@ -56,9 +56,13 @@ QC3a <- function(d_metingen, d_parameter,
     # verwijder NA's uit waarde kolom
     tidyr::drop_na(waarde) %>%
     # waarde <RG aanpassen naar 0.5 * RG. Geen ROS regressie
-    dplyr::mutate(waarde = ifelse(rapportagegrens > waarde, rapportagegrens, waarde)) %>% 
-    dplyr::mutate(waarde = ifelse(detectieteken == "<",
-                                  0.5 * waarde, waarde)) %>%
+    dplyr::mutate(waarde = case_when(
+      rapportagegrens > waarde ~ rapportagegrens,
+      TRUE ~ waarde)) %>%
+    dplyr::mutate(waarde = case_match(
+      detectieteken, 
+      "<" ~ 0.5*waarde,
+      .default = waarde)) %>%
     dplyr::group_by(putcode, filter, parameter) %>%
     # bereken gemiddelde en sd per reeks voor lognormale verdeling
     dplyr::mutate(n.meetjaar = dplyr::n_distinct(jaar),
@@ -77,7 +81,7 @@ QC3a <- function(d_metingen, d_parameter,
                                    "onverdacht"))) %>%
     # voeg type toe voor plotjes nieuwe en oude meetrondes
     dplyr::mutate(type = ifelse(jaar == meetronde, "nieuw", "oud")) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() 
   
   rapportageTekst <- paste("Er zijn in totaal", 
                            nrow(d %>% dplyr::filter(oordeel == "twijfelachtig")), 
