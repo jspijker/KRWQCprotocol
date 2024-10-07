@@ -55,7 +55,7 @@ QC4c <- function(d_metingen,
         .default = parameter
       )
     )
-
+  
   # gegevens apart zetten om later qcid weer toe te voegen
   id <- d %>%
     dplyr::filter(parameter == "ecv") %>%
@@ -111,6 +111,12 @@ QC4c <- function(d_metingen,
   # Rijen met missende waardes op niet uitvoerbaar zetten
   niet_uitvoerbaar_id <- qcidNietUitvoerbaar(res, d_metingen, c("xecv", "xca", "xna", "xmg", "xk", "xcl", "xso4"))
   
+  # Monsterid niet uitvoerbaar
+  monsterid_niet_uitvoerbaar <- d %>% 
+    filter(qcid %in% niet_uitvoerbaar_id) %>% 
+    pull(monsterid) %>% 
+    unique()
+  
   # Rijen met missende waardes weghalen
   res <- res %>% drop_na(c("xecv", "xca", "xna", "xmg", "xk", "xcl", "xso4"))
   
@@ -125,22 +131,18 @@ QC4c <- function(d_metingen,
                              add_bicarbonate = add_bicarbonate, 
                              add_phosphate = add_phosphate)
   
-  # Nu check op afwijking EC berekend en gemeten EC
-  resultaat_df <- d %>%
-    # selecteer relevante kolommen
-    dplyr::select(monsterid, jaar, maand, dag, putcode, filter, 
-                  pos, neg, ib, xecv, ec25, percentageverschil_xecv_ec25) %>%
-    # selecteer afwijkingen >10%
-    dplyr::filter(abs(percentageverschil_xecv_ec25) > 10) %>%
-    # ken oordeel twijfelachtig toe
-    dplyr::mutate(oordeel = "twijfelachtig") %>%
-    # qcid weer toevoegen aan afwijkende EC waardes om weg te schrijven
-    dplyr::left_join(., id, 
-                     by = c("monsterid", "jaar", "maand", "dag", "putcode", "filter")) %>%
-    select(qcid, monsterid, jaar, maand, dag, putcode, filter, pos, neg, ib,
-           xecv, ec25, percentageverschil_xecv_ec25, oordeel)
+  d <- d %>% dplyr::filter(abs(percentageverschil_xecv_ec25) > 10)
   
-  rapportageTekst <- paste("Er zijn in totaal", nrow(resultaat_df), 
+  # Nu check op afwijking EC berekend en gemeten EC
+  resultaat_df <- d_metingen %>%
+    dplyr::mutate(oordeel = case_match(monsterid, 
+                                       d$monsterid ~ "twijfelachtig",
+                                       monsterid_niet_uitvoerbaar ~ "niet uitvoerbaar",
+                                       .default = "onverdacht")) %>%
+    dplyr::filter(oordeel != "onverdacht") %>%
+    dplyr::left_join(., d %>% dplyr::select(monsterid, pos, neg, ib, xecv, ec25, percentageverschil_xecv_ec25), by = "monsterid")
+  
+  rapportageTekst <- paste("Er zijn in totaal klopt niet", nrow(resultaat_df), 
                            "metingen waar EC-veld en berekende EC 10% of meer afwijken")
   
   if(verbose) {
@@ -476,6 +478,7 @@ Rossum<-function(z=dataframeuitMaakKolomMeth){
   if(!any(names(b) == "al")) {
   b <- cbind(b, al = rep(0, nrow(b)))
   }
+  b$al=0
   b$g0an =86*b$co3+44.5*b$hco3+79.8*b$so4+76.3*b$cl+71.4*b$no3
   b$g0kat=59.5*b$ca+53.1*b$mg+50.1*b$na+73.5*b$k+349*b$h3o+73.5*b$nh4+54*b$fe+78*b$al
   b$zan =(4*(b$co3+b$so4)+b$cl+b$hco3+b$no3)  /(2*(b$co3+b$so4)+b$cl+b$hco3+b$no3)
