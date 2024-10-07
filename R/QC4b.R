@@ -66,8 +66,8 @@ QC4b <- function(d_metingen, d_parameter, geleidendheid_veld_naam = "GELDHD_VELD
         dplyr::select(-c(qcid, detectieteken, rapportagegrens)) %>%
         tidyr::pivot_wider(names_from = parameter,
                            values_from = waarde) %>%
-        dplyr::mutate(percentageverschil = 2*(GELDHD_VELD-GELDHD)/(GELDHD_VELD+GELDHD),
-                      oordeel = ifelse(abs(percentageverschil) > 0.1,
+        dplyr::mutate(percentageverschil = 200*(GELDHD_VELD-GELDHD)/(GELDHD_VELD+GELDHD),
+                      oordeel = ifelse(abs(percentageverschil) > 10,
                                        "twijfelachtig", "onverdacht"),
                       iden = monsterid) %>%
         dplyr::filter(oordeel != "onverdacht")
