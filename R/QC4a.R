@@ -79,6 +79,12 @@ QC4a <- function(d_metingen, ph_naam = "pH", hco3_naam = "HCO3", verbose = F) {
   # Rijen met missende waardes op niet uitvoerbaar zetten
   niet_uitvoerbaar_id <- qcidNietUitvoerbaar(res, d_metingen, c("Ca_meq", "Na_meq", "Mg_meq", "K_meq", "Cl_meq", "SO4_meq"))
   
+  # Monsterid niet uitvoerbaar
+  monsterid_niet_uitvoerbaar <- d %>% 
+    filter(qcid %in% niet_uitvoerbaar_id) %>% 
+    pull(monsterid) %>% 
+    unique()
+  
   # Rijen met missende waardes weghalen
   res <- res %>% drop_na(c("Ca_meq", "Na_meq", "Mg_meq", "K_meq", "Cl_meq", "SO4_meq"))
   
@@ -145,8 +151,10 @@ QC4a <- function(d_metingen, ph_naam = "pH", hco3_naam = "HCO3", verbose = F) {
   # voeg attribute met uitkomsten tests toe aan relevante dataset (d_metingen)
   resultaat_df <- d_metingen %>%
     dplyr::mutate(iden = monsterid) %>%
-    dplyr::mutate(oordeel = ifelse(iden %in% res$iden,
-                                   "twijfelachtig", "onverdacht")) %>%
+    dplyr::mutate(oordeel = case_match(iden, 
+                                       res$iden ~ "twijfelachtig",
+                                       monsterid_niet_uitvoerbaar ~ "niet uitvoerbaar",
+                                       .default = "onverdacht")) %>%
     dplyr::filter(oordeel != "onverdacht") %>%
     dplyr::left_join(., res %>% dplyr::select(iden, ib,
                                               `som cat`, Al_meq, Ca_meq, Fe_meq, K_meq, Mg_meq, Mn_meq, NH4_meq, Na_meq, Zn_meq, H3O_meq,
